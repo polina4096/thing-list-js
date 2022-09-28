@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" async></script>
+  </head>
+  <body class="horizontal space" style="width: 600px; height: 100vh; align-items: flex-end">
+    <div id="thing-list">
+    </div>
+    <!-- <style>
+      #buffer > * {
+        position: absolute;
+        bottom: 8px;
+      }
+    </style>
+    <div id="buffer" style="position: absolute; padding: 8px;">
+
+    </div> -->
+
+    <div class="flex panel" style="width: 300px; margin-bottom: 16px;">
+      <input id="input-text" placeholder="HTML markup or plain text">
+      <div class="horizontal">
+        <button id="action-push">Push</button>
+        <button id="action-clear">Clear</button>
+      </div>
+    </div>
+  </body>
+  <style>
+    #thing-list {
+      padding: 8px;
+    }
+
+    #thing-list > * {
+      display: block;
+    }
+  </style>
+  <script type="module" type="text/javascript">
+    import anime from '/anime.es.js';
+
+    const duration = 100;
+    const fadeinDuration = 90;
+
+    var target = 0;
+    var animation = null;
+    var marginTarget = 0;
+    var queueHidden = [];
+
+    const inputText = $('#input-text');
+    const thingList = $('#thing-list');
+    
+    $('#action-clear').listen('click', (e) => {
+      thingList.innerHTML = '';
+    });
+
+    $('#action-push').listen('click', (e) => {
+      pushDown(inputText.value);
+    });
+
+    // THE ONE YOU NEED
+    function pushDown(htmlString) {
+      const newElement = html(htmlString).tryWrap();
+      newElement.style.visibility = 'hidden';
+      // anime({
+      //   targets: newElement,
+      //   duration: fadeinDuration,
+      //   easing: 'linear',
+      //   opacity: [0, 1],
+      // });
+
+      $('#thing-list').insertAdjacentElement('afterbegin', newElement);
+      target -= newElement.clientHeight;
+
+      let base = 0;
+      if (animation != null) {
+        animation.pause();
+        let prop = window
+          .getComputedStyle($('#thing-list'))
+          .getPropertyValue('transform');
+
+        base = new DOMMatrixReadOnly(prop).f;
+      }
+
+      queueHidden.push(newElement);
+
+      setTimeout(() => {
+        let element = queueHidden.shift();
+        thingList.insertAdjacentElement('beforeend', element);
+        
+        marginTarget -= element.clientHeight;
+        element.style.visibility = 'visible';
+        anime({
+          targets: element,
+          duration: fadeinDuration,
+          easing: 'linear',
+          opacity: [0, 1],
+        });
+
+        if (queueHidden.length > 0) {
+          thingList.style.marginBottom = `${marginTarget}px`;
+        } else {
+          thingList.style.marginBottom = '';
+          marginTarget = 0;
+        }
+      }, duration);
+
+      animation = anime({
+        targets: thingList,
+        duration: duration,
+        easing: 'linear',
+        translateY: [base, target],
+        complete: function(anim) {
+          animation = null;
+          thingList.style.transform = '';
+          thingList.style.marginBottom = '';
+          target = 0;
+        }
+      });
+    }
+  
+    function pushUp() {
+      const newElement = html(inputText.value).tryWrap();
+      newElement.style.visibility = 'hidden';
+
+      thingList.insertAdjacentElement('beforeend', newElement);
+      target += newElement.clientHeight;
+
+      let base = 0;
+      if (animation != null) {
+        animation.pause();
+        let prop = window
+          .getComputedStyle($('#thing-list'))
+          .getPropertyValue('transform');
+
+        base = new DOMMatrixReadOnly(prop).f;
+      }
+
+      queueHidden.push(newElement);
+
+      setTimeout(() => {
+        let element = queueHidden.shift();
+        thingList.insertAdjacentElement('afterbegin', element);
+        
+        marginTarget -= element.clientHeight;
+        element.style.visibility = 'visible';
+        anime({
+          targets: element,
+          duration: duration,
+          opacity: [0, 1],
+          complete: function(anim) {
+          }
+        });
+
+        if (queueHidden.length > 0) {
+          thingList.style.marginTop = `${marginTarget}px`;
+        } else {
+          thingList.style.marginTop = '';
+          marginTarget = 0;
+        }
+      }, duration);
+
+      animation = anime({
+        targets: thingList,
+        duration: duration,
+        translateY: [base, target],
+        complete: function(anim) {
+          animation = null;
+          thingList.style.transform = '';
+          thingList.style.marginTop = '';
+          target = 0;
+        }
+      });
+    }
+  </script>
+</html>

@@ -1,0 +1,68 @@
+:root {
+	--font-size: 16px;
+	--flex-gap: 6px;
+	--border-style: 1.5px #AAA solid;
+	--border-radius: 5px;
+	--panel-background: #C5C5C525;
+	--panel-padding: 12px;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+body {
+	font-size: 16px;
+}
+
+input {
+	width: 100%;
+	display: block;
+	padding: 4px;
+	font-size: var(--font-size);
+	border: var(--border-style);
+	border-radius: var(--border-radius);
+}
+
+button {
+	width: 100%;
+	display: block;
+	padding: 4px 24px;
+	font-size: var(--font-size);
+	border: var(--border-style);
+	border-radius: var(--border-radius);
+	transition: 0.1s background-color;
+	cursor: pointer;
+}
+
+.flex {
+	display: flex;
+	flex-direction: column;
+	gap: var(--flex-gap);
+}
+
+.horizontal {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: var(--flex-gap);
+}
+
+.vertical {
+	display: flex;
+	flex-direction: column;
+	gap: var(--flex-gap);
+}
+
+.space {
+	justify-content: space-between;
+}
+
+.panel {
+	height: fit-content;
+	border: var(--border-style);
+	border-radius: var(--border-radius);
+	background: var(--panel-background);
+	padding:var(--panel-padding);
+}

@@ -1,0 +1,14 @@
+{
+  "name": "thing-list",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Полина",
+  "license": "WTFPL",
+  "dependencies": {
+    "animejs": "^3.2.1",
+    "express": "^4.18.1"
+  },
+  "scripts": {
+    "serve": "node index.js"
+  }
+}
